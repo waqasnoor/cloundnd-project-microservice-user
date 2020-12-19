@@ -10,12 +10,3 @@ export const sequelize = new Sequelize({
   dialect: config.dialect,
   storage: ":memory:",
 });
-
-console.log({
-  username: config.username,
-  password: config.password,
-  database: config.database,
-  host: config.host,
-
-  dialect: config.dialect,
-});
