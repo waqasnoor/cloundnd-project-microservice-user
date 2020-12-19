@@ -2,9 +2,7 @@
 FROM node:12-alpine
 
 RUN apk update 
-RUN apk add  python 
-RUN apk add  g++
-RUN apk add  make 
+RUN apk add --no-cache  python g++ make
 
 
 # Create app directory
@@ -20,9 +18,7 @@ COPY www/ ./
 RUN npm install
 
 
-RUN apk del  python 
-RUN apk del  g++
-RUN apk del  make 
+RUN apk del  python g++ make
 
 
 # Bind the port that the image will run on
