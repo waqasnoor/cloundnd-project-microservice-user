@@ -10,10 +10,6 @@ import bodyParser from "body-parser";
 import { config } from "./config/config";
 import { V0_USER_MODELS } from "./controllers/v0/model.index";
 
-interface ExtendedRequest extends Request {
-  requestId: string;
-}
-
 (async () => {
   await sequelize.addModels(V0_USER_MODELS);
 
@@ -38,33 +34,12 @@ interface ExtendedRequest extends Request {
       origin: config.url,
     })
   );
-  app.use((req: ExtendedRequest, _, next: NextFunction): void => {
-    const requestId = uuidv4();
-    const { url, method }: { url: string; method: string } = req;
-    console.log(
-      `${new Date().toLocaleString()}: pid=${requestId} ${method}://${url} started`
-    );
-    req.requestId = requestId;
-    next();
-  });
 
   app.use("/", IndexRouter);
 
   // Root URI call
   app.get("/health", async (req, res) => {
     res.send("server is live");
-  });
-
-  app.use((req: ExtendedRequest) => {
-    const {
-      url,
-      method,
-      requestId,
-    }: { url: string; method: string; requestId: string } = req;
-
-    console.log(
-      `${new Date().toLocaleString()}: pid=${requestId} ${method}://${url} ended`
-    );
   });
 
   // Start the Server

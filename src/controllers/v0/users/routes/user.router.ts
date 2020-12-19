@@ -13,7 +13,6 @@ router.get("/:id", async (req: Request, res: Response, next: NextFunction) => {
   const { id } = req.params;
   const item = await User.findByPk(id);
   res.send(item);
-  next();
 });
 
 export const UserRouter: Router = router;
