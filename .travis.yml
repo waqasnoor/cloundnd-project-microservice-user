@@ -11,6 +11,7 @@ branches:
 
   #Pre-testing installs
 install:
+  - npm install
   - npm run build
 
 #script to be run such as tests
