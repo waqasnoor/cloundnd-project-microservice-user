@@ -1,5 +1,6 @@
 import cors from "cors";
-import express from "express";
+import express, { NextFunction } from "express";
+import { v4 as uuidv4 } from "uuid";
 
 import { sequelize } from "./sequelize";
 
@@ -7,10 +8,14 @@ import { IndexRouter } from "./controllers/v0/index.router";
 
 import bodyParser from "body-parser";
 import { config } from "./config/config";
-import { V0_FEED_MODELS, V0_USER_MODELS } from "./controllers/v0/model.index";
+import { V0_USER_MODELS } from "./controllers/v0/model.index";
+
+interface ExtendedRequest extends Request {
+  requestId: string;
+}
+
 (async () => {
   await sequelize.addModels(V0_USER_MODELS);
-  await sequelize.addModels(V0_FEED_MODELS);
 
   await sequelize.sync();
 
@@ -33,12 +38,33 @@ import { V0_FEED_MODELS, V0_USER_MODELS } from "./controllers/v0/model.index";
       origin: config.url,
     })
   );
+  app.use((req: ExtendedRequest, _, next: NextFunction): void => {
+    const requestId = uuidv4();
+    const { url, method }: { url: string; method: string } = req;
+    console.log(
+      `${new Date().toLocaleString()}: pid=${requestId} ${method}://${url} started`
+    );
+    req.requestId = requestId;
+    next();
+  });
 
-  app.use("/api/v0/", IndexRouter);
+  app.use("/", IndexRouter);
 
   // Root URI call
-  app.get("/", async (req, res) => {
-    res.send("/api/v0/");
+  app.get("/health", async (req, res) => {
+    res.send("server is live");
+  });
+
+  app.use((req: ExtendedRequest) => {
+    const {
+      url,
+      method,
+      requestId,
+    }: { url: string; method: string; requestId: string } = req;
+
+    console.log(
+      `${new Date().toLocaleString()}: pid=${requestId} ${method}://${url} ended`
+    );
   });
 
   // Start the Server
