@@ -22,7 +22,7 @@ before_script:
 script:
   - docker --version #print docker version
   - docker build -t user-api .
-  - docker tag user-api waqasnoor/user-api:latest
+  - docker tag user-api waqasnoor/user-api:"$TRAVIS_BUILD_NUMBER"
 
 # Tasks to perform after image
 after_success:

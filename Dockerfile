@@ -1,11 +1,11 @@
 # Use NodeJS base image
-FROM node:12-slim
+FROM node:12-alpine
 
-RUN apt-get update || : && apt-get --no-install-recommends install python -y
-RUN apt-get --no-install-recommends install g++ -y
-RUN apt-get --no-install-recommends install make -y
+RUN apk update 
+RUN apk add  python 
+RUN apk add  g++
+RUN apk add  make 
 
-RUN apt-get clean
 
 # Create app directory
 WORKDIR /usr/src/app
@@ -19,6 +19,10 @@ COPY www/ ./
 # Install dependencies
 RUN npm install
 
+
+RUN apk del  python 
+RUN apk del  g++
+RUN apk del  make 
 
 
 # Bind the port that the image will run on
