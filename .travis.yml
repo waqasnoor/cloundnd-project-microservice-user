@@ -11,7 +11,7 @@ branches:
 
   #Pre-testing installs
 install:
-  - echo "nothing needs to be installed"
+  - npm run build
 
 #script to be run such as tests
 
