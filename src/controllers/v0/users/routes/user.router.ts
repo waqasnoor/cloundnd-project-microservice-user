@@ -7,8 +7,6 @@ const router: Router = Router();
 
 router.use("/auth", AuthRouter);
 
-router.get("/");
-
 router.get("/:id", async (req: Request, res: Response, next: NextFunction) => {
   const { id } = req.params;
   const item = await User.findByPk(id);
