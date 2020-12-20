@@ -28,5 +28,5 @@ script:
 # Tasks to perform after image
 after_success:
   - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
-  - docker push waqasnoor/user-api:latest
   - docker push waqasnoor/user-api:"$TRAVIS_BUILD_NUMBER"
+  - docker push waqasnoor/user-api:latest
